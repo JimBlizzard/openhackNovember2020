@@ -1,0 +1,14 @@
+# These owners will be the default owners for everything in the repo.
+*       @jimblizzard
+
+# poi
+apis/poi/* @jimblizzard
+
+# trips
+apis/trips/* @jimblizzard
+
+# user-java
+apis/user-java/* @jimblizzard
+
+# userprofile
+apis/userprofile/* @jimblizzard
