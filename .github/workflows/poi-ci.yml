@@ -35,7 +35,12 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       working-directory: ${{env.working-directory}}
       
-    - name: The job has failed 
+    - name: If the job failed 
       if: ${{ failure() }}
+      run: echo $PATH
+      shell: bash
+
+    - name: If the job succeeded
+      if: ${{ success() }}
       run: echo $PATH
       shell: bash
