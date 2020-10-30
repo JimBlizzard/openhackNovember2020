@@ -35,12 +35,22 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       working-directory: ${{env.working-directory}}
       
-    - name: If the job failed 
+    - name: Create issue using REST API if the job failed 
       if: ${{ failure() }}
-      run: echo $PATH
+      run: | 
+        curl \
+            --request POST \
+            --url https://api.github.com/repos/jimblizzard/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            -data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+              }' 
+        
       shell: bash
 
-    - name: If the job succeeded
-      if: ${{ success() }}
-      run: echo $PATH
-      shell: bash
+#    - name: If the job succeeded
+#      if: ${{ success() }}
+#      run: echo $PATH
+#      shell: bash
