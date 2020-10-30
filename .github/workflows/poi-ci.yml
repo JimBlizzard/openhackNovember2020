@@ -1,4 +1,4 @@
-name: .NET Core
+name: poi-ci-build
 
 on:
   push:
