@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      working-directory: /apis/poi/web
+      working-directory: ./apis/poi/web
       registry-name: openhackvn13pzx8acr   
       # openhackvn13pzx8acr.azurecr.io
 
@@ -24,7 +24,7 @@ jobs:
       run: |
         echo "Building API-POI image..."
         echo "pwd: "
-        $CURRENTDIR=pwd
+        pwd
         echo "Changing directory to ${{env.working-directory}}"
         cd $CURRENTDIR"${{env.working-directory}}"
         echo "registryname ${{env.registry-name}}"
