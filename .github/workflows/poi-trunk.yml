@@ -44,7 +44,7 @@ jobs:
         echo "pwd: "
         pwd
         echo "Changing directory to web"
-        cd ${{web-directory}}
+        cd web
         echo "registryname ${{env.registry-name}}"
         # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" -- registry ${{env.registry-name}} --file Dockerfile .
 
