@@ -23,6 +23,7 @@ jobs:
     - name: Build / Deploy POI image
       run: |
         echo "Building API-POI image..."
+        echo "pwd: " pwd
         echo "Changing directory to ${{env.working-directory}}"
         cd "${{env.working-directory}}"
         echo "registryname ${{env.registry-name}}"
