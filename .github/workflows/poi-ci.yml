@@ -5,7 +5,7 @@ on:
     branches: 
       - 'poi*'
     paths:
-      - 'apis/poi/**
+      - 'apis/poi/**'
 
 jobs:
   build:
