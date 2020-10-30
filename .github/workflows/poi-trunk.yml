@@ -49,6 +49,6 @@ jobs:
         #
         #
         # How can I plug the build number into ${BASEIMAGETAG} ???? 
-        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" --registry openhackvn13pzx8acr --file Dockerfile .
+        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" --registry openhackvn13pzx8acr.azurecr.io --file Dockerfile .
 
       shell: bash 
