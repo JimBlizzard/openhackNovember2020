@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      working-directory: ./web
+      working-directory: /apis/poi/web
       registry-name: openhackvn13pzx8acr   
       # openhackvn13pzx8acr.azurecr.io
 
@@ -24,9 +24,9 @@ jobs:
       run: |
         echo "Building API-POI image..."
         echo "pwd: "
-        pwd
+        $CURRENTDIR=pwd
         echo "Changing directory to ${{env.working-directory}}"
-        cd "${{env.working-directory}}"
+        cd $CURRENTDIR"${{env.working-directory}}"
         echo "registryname ${{env.registry-name}}"
         # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" -- registry ${{env.registry-name}} --file Dockerfile .
 
