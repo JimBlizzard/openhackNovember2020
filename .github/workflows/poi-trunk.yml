@@ -46,6 +46,9 @@ jobs:
         echo "Changing directory to web"
         cd web
         echo "registryname ${{env.registry-name}}"
-        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" -- registry ${{env.registry-name}} --file Dockerfile .
+        #
+        #
+        # How can I plug the build number into ${BASEIMAGETAG} ???? 
+        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" --registry openhackvn13pzx8acr --file Dockerfile .
 
       shell: bash 
