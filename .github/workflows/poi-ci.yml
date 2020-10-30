@@ -17,16 +17,39 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1  
+    
     - name: Install dependencies
       run: dotnet restore
       working-directory: ${{env.working-directory}}
+      
     - name: Build
       run: dotnet build --configuration Release --no-restore
       working-directory: ${{env.working-directory}}
+      
     - name: Test
       run: dotnet test --no-restore --verbosity normal
       working-directory: ${{env.working-directory}}
+      
+    - name: Create issue using REST API if the job failed 
+      if: ${{ failure() }}
+      run: | 
+        curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+              }' 
+        
+      shell: bash
+
+#    - name: If the job succeeded
+#      if: ${{ success() }}
+#      run: echo $PATH
+#      shell: bash
