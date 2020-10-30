@@ -3,9 +3,9 @@ name: poi-ci-build
 on:
   push:
     branches: 
-      - 'poi**/**'
+      - poi**
     paths:
-      - 'apis/poi/**'
+      - apis/poi/**
 
 jobs:
   build:
