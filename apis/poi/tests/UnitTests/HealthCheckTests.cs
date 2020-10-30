@@ -13,7 +13,7 @@ namespace UnitTests
             Assert.Equal("Healthy", new Healthcheck().Status);
 
             // force a failed test. :) 
-            // Assert.Equal("A", "B"); 
+            // Assert.Equal("A", "B");  
 
         }
     }
