@@ -12,6 +12,9 @@ namespace UnitTests
             Assert.Equal("POI Service Healthcheck", new Healthcheck().Message);
             Assert.Equal("Healthy", new Healthcheck().Status);
 
+            // force a failed test. :) 
+            Assert.Equal("A", "B");
+
         }
     }
 }
