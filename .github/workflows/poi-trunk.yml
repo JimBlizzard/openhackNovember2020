@@ -26,7 +26,7 @@ jobs:
         echo "pwd: "
         pwd
         echo "Changing directory to ${{env.working-directory}}"
-        cd $CURRENTDIR"${{env.working-directory}}"
+        cd ${{env.working-directory}}"
         echo "registryname ${{env.registry-name}}"
         # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" -- registry ${{env.registry-name}} --file Dockerfile .
 
