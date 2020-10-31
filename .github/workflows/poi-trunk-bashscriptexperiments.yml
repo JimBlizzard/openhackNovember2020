@@ -1,0 +1,59 @@
+name: poi-trunk-deploy
+
+# deploy to ACR
+
+on:
+  push:
+    branches: 
+      - trunk
+#    paths:
+#      - apis/poi/**
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      working-directory: ./apis/poi
+      webdir: web
+      REGISTRYNAME: openhackvn13pzx8acr   
+      # openhackvn13pzx8acr.azurecr.io
+
+    steps: 
+
+    - uses: actions/checkout@v2
+    
+    # - name: Setup .NET Core
+    #   uses: actions/setup-dotnet@v1
+    #   with:
+    #     dotnet-version: 2.1  
+    
+    # - name: Install dependencies
+    #   run: dotnet restore
+    #   working-directory: ${{env.working-directory}}
+      
+    # - name: Build
+    #   run: dotnet build --configuration Release --no-restore
+    #   working-directory: ${{env.working-directory}}
+
+    - name: Build / Deploy POI image
+      working-directory: ${{env.working-directory}}
+      run: |
+        echo "Building API-POI image..."
+        echo "pwd: "
+        pwd
+        echo "Changing directory to web"
+        cd $webdir
+        pwd
+        echo "env.RESGISTRYNAME: " ${{env.REGISTRYNAME}}
+        echo "REGISTRYNAME: " $REGISTRYNAME
+        #
+        echo "webdir: " $webdir
+        #
+        #
+        # How can I plug the build number into ${BASEIMAGETAG} ???? 
+        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" --registry openhackvn13pzx8acr.azurecr.io --file Dockerfile .
+        printenv
+
+      shell: bash 
