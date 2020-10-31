@@ -16,7 +16,7 @@ jobs:
 
     env:
       working-directory: ./apis/poi
-      web-directory: web
+      webdir: web
       registry-name: openhackvn13pzx8acr   
       # openhackvn13pzx8acr.azurecr.io
 
@@ -47,7 +47,7 @@ jobs:
         cd web
         echo "registryname ${{env.registry-name}}"
         #
-        echo "web-directory: $web-directory"
+        echo "webdir: " $webdir
         #
         #
         # How can I plug the build number into ${BASEIMAGETAG} ???? 
