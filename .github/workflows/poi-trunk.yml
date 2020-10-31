@@ -6,8 +6,8 @@ on:
   push:
     branches: 
       - trunk
-    paths:
-      - apis/poi/**
+    # paths:
+    #   - apis/poi/**
 
 jobs:
   build:
@@ -16,9 +16,11 @@ jobs:
 
     env:
       working-directory: ./apis/poi
-      webdir: web
-      REGISTRYNAME: openhackvn13pzx8acr   
-      # openhackvn13pzx8acr.azurecr.io
+      WEBDIR: web
+      REGISTRYNAME: openhackvn13pzx8acr 
+      APPID: ${{ secrets.APP_ID }}
+      SERVICEPRINPWD: ${{ secrets.SERVICE_PRIN_PWD }}
+      TENANTID: ${{ secrets.TENANT_ID }}
 
     steps: 
 
@@ -41,18 +43,9 @@ jobs:
       working-directory: ${{env.working-directory}}
       run: |
         echo "Building API-POI image..."
-        echo "pwd: "
-        pwd
-        echo "Changing directory to web"
-        cd $webdir
-        pwd
-        echo "env.RESGISTRYNAME: " ${{env.REGISTRYNAME}}
-        echo "REGISTRYNAME: " $REGISTRYNAME
-        #
-        echo "webdir: " $webdir
-        #
-        #
-        # How can I plug the build number into ${BASEIMAGETAG} ???? 
-        # az acr build --image "devopsoh/api-poi:${BASEIMAGETAG}" --registry openhackvn13pzx8acr.azurecr.io --file Dockerfile .
+        cd $WEBDIR
+        az login --service-principal --username $APPID --password $SERVICEPRINPWD --tenant $TENANTID
+        az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
+        echo "The docker file with tag " $GITHUB_RUN_NUMBER " has been uploaded to ACR."
 
       shell: bash 
