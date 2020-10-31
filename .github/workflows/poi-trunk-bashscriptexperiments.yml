@@ -55,7 +55,9 @@ jobs:
         #
         echo "WEBDIR: " $WEBDIR
         #
-        echo "secrets - user: " ${{secrets.USER}}
+        echo "secrets - user: " $APPID
+        echo "pwd: " $SERVICEPRINPWD
+        echo "tenant: " $TENANTID
         #
         #
         # How can I plug the build number into ${BASEIMAGETAG} ???? 
