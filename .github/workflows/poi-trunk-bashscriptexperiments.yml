@@ -54,7 +54,7 @@ jobs:
         echo "REGISTRYNAME: " $REGISTRYNAME
         #
         echo "WEBDIR: " $WEBDIR
-        #
+        # 
         echo "secrets - user: " $APPID
         echo "pwd: " $SERVICEPRINPWD
         echo "tenant: " $TENANTID
