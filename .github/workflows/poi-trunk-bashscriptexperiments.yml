@@ -17,7 +17,10 @@ jobs:
     env:
       working-directory: ./apis/poi
       WEBDIR: web
-      REGISTRYNAME: openhackvn13pzx8acr   
+      REGISTRYNAME: openhackvn13pzx8acr 
+      USER: ${{secret.USER}}
+      SERVICEPRINPWD: ${{secret.SERVICE_PRIN_PWD}}
+      TENANT: ${{secret.TENANT}}
       # openhackvn13pzx8acr.azurecr.io
 
     steps: 
@@ -54,7 +57,8 @@ jobs:
         #
         # How can I plug the build number into ${BASEIMAGETAG} ???? 
         # answer: use the environment variable. $GITHUB_RUN_NUMBER
-        az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
+        az login --service-principal -u $USER -p $SERVICEPRINPWD -tenant $TENANT
+        # az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
         # echo "run number for this workflow: " $GITHUB_RUN_NUMBER
         # echo "print all environment variable values...."
         # printenv
