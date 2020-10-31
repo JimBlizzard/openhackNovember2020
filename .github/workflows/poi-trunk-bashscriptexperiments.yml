@@ -5,7 +5,7 @@ name: poi-trunk-bashscriptexperiments
 on:
   push:
     branches: 
-      - trunk
+      - nobranch
 #    paths:
 #      - apis/poi/**
 
