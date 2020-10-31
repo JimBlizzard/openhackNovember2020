@@ -63,7 +63,7 @@ jobs:
         # How can I plug the build number into ${BASEIMAGETAG} ???? 
         # answer: use the environment variable. $GITHUB_RUN_NUMBER
         az login --service-principal --username $APPID --password $SERVICEPRINPWD --tenant $TENANTID
-        # az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
+        az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
         # echo "run number for this workflow: " $GITHUB_RUN_NUMBER
         # echo "print all environment variable values...."
         # printenv
