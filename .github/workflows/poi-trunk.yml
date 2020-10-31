@@ -17,7 +17,7 @@ jobs:
     env:
       working-directory: ./apis/poi
       webdir: web
-      registry-name: openhackvn13pzx8acr   
+      REGISTRYNAME: openhackvn13pzx8acr   
       # openhackvn13pzx8acr.azurecr.io
 
     steps: 
@@ -46,7 +46,8 @@ jobs:
         echo "Changing directory to web"
         cd $webdir
         pwd
-        echo "registryname ${{env.registry-name}}"
+        echo "env.RESGISTRYNAME: " ${{env.REGISTRYNAME}}
+        echo "REGISTRYNAME: " $REGISTRYNAME
         #
         echo "webdir: " $webdir
         #
