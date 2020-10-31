@@ -44,7 +44,8 @@ jobs:
         echo "pwd: "
         pwd
         echo "Changing directory to web"
-        cd web
+        cd $webdir
+        pwd
         echo "registryname ${{env.registry-name}}"
         #
         echo "webdir: " $webdir
