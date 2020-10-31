@@ -18,9 +18,9 @@ jobs:
       working-directory: ./apis/poi
       WEBDIR: web
       REGISTRYNAME: openhackvn13pzx8acr 
-      USER: ${{secret.USER}}
-      SERVICEPRINPWD: ${{secret.SERVICE_PRIN_PWD}}
-      TENANT: ${{secret.TENANT}}
+      USER: ${{secrets.USER}}
+      SERVICEPRINPWD: ${{secrets.SERVICE_PRIN_PWD}}
+      TENANT: ${{secrets.TENANT}}
       # openhackvn13pzx8acr.azurecr.io
 
     steps: 
