@@ -1,3 +1,0 @@
-simple file to make sure this works with azure boards integration....
-
-need to link it with work item 2502
