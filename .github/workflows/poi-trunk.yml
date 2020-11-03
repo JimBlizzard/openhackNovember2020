@@ -68,13 +68,13 @@ jobs:
       shell: bash
 
 
-    # - name: Build / Deploy POI image
-    #   working-directory: ${{env.working-directory}}
-    #   run: |
-    #     echo "Building API-POI image..."
-    #     cd $WEBDIR
-    #     az login --service-principal --username $APPID --password $SERVICEPRINPWD --tenant $TENANTID
-    #     az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
-    #     echo "The docker file with tag " $GITHUB_RUN_NUMBER " has been uploaded to ACR."
+    - name: Build / Deploy POI image
+      working-directory: apis/poi/web/
+      run: |
+        echo "Building API-POI image..."
+        # cd $WEBDIR
+        az login --service-principal --username $APPID --password $SERVICEPRINPWD --tenant $TENANTID
+        az acr build --image devopsoh/api-poi:$GITHUB_RUN_NUMBER --registry $REGISTRYNAME --file Dockerfile .
+        echo "The docker file with tag " $GITHUB_RUN_NUMBER " has been uploaded to ACR."
 
-    #   shell: bash 
+      shell: bash 
