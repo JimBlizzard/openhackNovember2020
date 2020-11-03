@@ -41,7 +41,7 @@ jobs:
       run: dotnet build --configuration Release --no-restore apis/poi/web/*.csproj
 
     - name: .NET Build Unit Tests
-      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests.csproj
+      run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests/UnitTests.csproj
 
     - name: .NET Test
       run: dotnet test --no-restore --verbosity normal apis/poi/tests/UnitTests  /p:CollectCoverage=true /p:CoverletOutput=lcov/ /p:CoverletOutputFormat=lcov 
