@@ -20,7 +20,7 @@ on:
       - .github/workflows/poi-trunk.yml
 
 jobs:
-  build_and_test:
+  build_test_deploy:
     runs-on: ubuntu-latest
     steps: 
     - uses: actions/checkout@v2
@@ -68,7 +68,7 @@ jobs:
       shell: bash
 
 
-    - name: Build / Deploy POI image
+    - name: Build / Deploy POI container image
       working-directory: apis/poi/web/
       run: |
         echo "Building API-POI image..."
