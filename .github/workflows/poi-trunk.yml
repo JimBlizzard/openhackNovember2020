@@ -1,7 +1,6 @@
 name: POI CICD
 
 env:
-  # working-directory: ./apis/poi
   WEBDIR: web
   REGISTRYNAME: openhackvn13pzx8acr 
   APPID: ${{ secrets.APP_ID }}
@@ -70,7 +69,7 @@ jobs:
         
       shell: bash
 
-      
+
     # - name: Build / Deploy POI image
     #   working-directory: ${{env.working-directory}}
     #   run: |
