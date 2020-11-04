@@ -1,0 +1,5 @@
+Example script: (need to be signed into the correct Azure account)
+
+az ad sp create-for-rbac --name blizzOHpoiDeploy --sdk-auth --role contributor
+
+Place the output in an GH secret

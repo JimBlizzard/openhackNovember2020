@@ -3,9 +3,11 @@ name: POI CICD
 env:
   WEBDIR: web
   REGISTRYNAME: openhackvn13pzx8acr 
+  REPOSITORYNAME: devopsoh/api-poi
   APPID: ${{ secrets.APP_ID }}
   SERVICEPRINPWD: ${{ secrets.SERVICE_PRIN_PWD }}
   TENANTID: ${{ secrets.TENANT_ID }}
+  WEBAPPNAME: openhackvn13pzx8poi
 
 on:
   push:
@@ -20,7 +22,7 @@ on:
       - .github/workflows/poi-trunk.yml
 
 jobs:
-  build_test_deploy:
+  build_and_test:
     runs-on: ubuntu-latest
     steps: 
     - uses: actions/checkout@v2
@@ -52,7 +54,26 @@ jobs:
         base-path: apis/poi
         flag-name: Unit
 
-    - name: Build / Deploy POI container image to ACR
+    - name: Create issue using REST API if the job failed 
+      if: ${{ failure() }}
+      run: | 
+        curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The build_and_test job failed."
+              }' 
+        
+      shell: bash
+
+  docker_build_push_to_ACR:
+    if: github.ref == 'refs/heads/trunk' 
+    runs-on: ubuntu-latest
+    needs: build_and_test
+    steps: 
+    - name: Build and push POI container image to ACR
       working-directory: apis/poi/web/
       run: |
         echo "Building API-POI image..."
@@ -63,14 +84,45 @@ jobs:
 
       shell: bash 
 
-    - name: Deploy POI container to web app
-      uses: azure/webapps-deploy@v2
+    - name: Create issue using REST API if the job failed 
+      if: ${{ failure() }}
+      run: | 
+        curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The docker_build_push_to_ACR job failed."
+              }' 
+        
+      shell: bash
+
+  deploy_staging: 
+    if: github.ref == 'refs/heads/trunk' 
+    runs-on: ubuntu-latest
+    needs: docker_build_push_to_ACR
+    steps:
+    - name: Azure authentication
+      uses: azure/login@v1
       with:
-        app-name: 'openhackvn13pzx8poi'
-        publish-profile: ${{ secrets.PUBLISH_PROFILE_PRODUCTION }}
-        images: $REGISTRYNAME/devopsho/api-poi:$GITHUB_RUN_NUMBER
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Azure WebApp
+      uses: azure/webapps-deploy@v2 
+      with:
+        app-name: ${{ env.WEBAPPNAME }}
+        slot-name: staging
+        images: ${{ env.REGISTRYNAME }}/${{ env.REPOSITORYNAME }}:${{GITHUB.RUN_NUMBER}}
 
 
+    # steps:
+    # - name: Deploy POI container to web app
+    #   uses: azure/webapps-deploy@v2
+    #   with:
+    #     app-name: 'openhackvn13pzx8poi'
+    #     publish-profile: ${{ secrets.PUBLISH_PROFILE_PRODUCTION }}
+    #     images: $REGISTRYNAME/devopsho/api-poi:$GITHUB_RUN_NUMBER
 
     - name: Create issue using REST API if the job failed 
       if: ${{ failure() }}
@@ -81,7 +133,7 @@ jobs:
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --data '{
               "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The deploy_staging job failed."
               }' 
         
       shell: bash
