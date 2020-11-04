@@ -80,7 +80,7 @@ jobs:
       shell: bash 
 
     - name: Deploy POI container to web app
-      uses: azure/webapps-deploy@2
+      uses: azure/webapps-deploy@v2
       with:
         app-name: 'openhackvn13pzx8poi'
         publish-profile: ${{ secrets.PUBLISH_PROFILE_PRODUCTION }}
