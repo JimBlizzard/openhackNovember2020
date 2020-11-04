@@ -52,22 +52,6 @@ jobs:
         base-path: apis/poi
         flag-name: Unit
 
-
-    - name: Create issue using REST API if the job failed 
-      if: ${{ failure() }}
-      run: | 
-        curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/issues \
-            --header "Accept: application/vnd.github.v3+json" \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            --data '{
-              "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
-              }' 
-        
-      shell: bash
-
-
     - name: Build / Deploy POI container image to ACR
       working-directory: apis/poi/web/
       run: |
@@ -85,3 +69,20 @@ jobs:
         app-name: 'openhackvn13pzx8poi'
         publish-profile: ${{ secrets.PUBLISH_PROFILE_PRODUCTION }}
         images: $REGISTRYNAME/devopsho/api-poi:$GITHUB_RUN_NUMBER
+
+
+
+    - name: Create issue using REST API if the job failed 
+      if: ${{ failure() }}
+      run: | 
+        curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_."
+              }' 
+        
+      shell: bash
+
