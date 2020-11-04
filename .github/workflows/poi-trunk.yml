@@ -74,7 +74,7 @@ jobs:
     needs: build_and_test
     steps: 
     - uses: actions/checkout@v2
-    
+
     - name: Build and push POI container image to ACR
       working-directory: apis/poi/web/
       run: |
@@ -100,7 +100,7 @@ jobs:
         
       shell: bash
 
-  deploy_staging: 
+  deploy_production: 
     if: github.ref == 'refs/heads/trunk' 
     runs-on: ubuntu-latest
     needs: docker_build_push_to_ACR
@@ -114,7 +114,7 @@ jobs:
       uses: azure/webapps-deploy@v2 
       with:
         app-name: ${{ env.WEBAPPNAME }}
-        slot-name: staging
+        # slot-name: staging
         images: ${{ env.REGISTRYNAME }}/${{ env.REPOSITORYNAME }}:${{GITHUB.RUN_NUMBER}}
 
 
