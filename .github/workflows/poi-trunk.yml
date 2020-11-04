@@ -68,7 +68,7 @@ jobs:
       shell: bash
 
 
-    - name: Build / Deploy POI container image
+    - name: Build / Deploy POI container image to ACR
       working-directory: apis/poi/web/
       run: |
         echo "Building API-POI image..."
@@ -78,3 +78,10 @@ jobs:
         echo "The docker file with tag " $GITHUB_RUN_NUMBER " has been uploaded to ACR."
 
       shell: bash 
+
+    - name: Deploy POI container to web app
+      uses: azure/webapps-deploy@2
+      with:
+        app-name: 'openhackvn13pzx8poi'
+        publish-profile: ${{ secrets.PUBLISH_PROFILE_PRODUCTION }}
+        images: $REGISTRYNAME/devopsho/api-poi:$GITHUB_RUN_NUMBER
