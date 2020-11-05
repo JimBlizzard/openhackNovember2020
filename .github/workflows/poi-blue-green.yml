@@ -152,9 +152,8 @@ jobs:
         # the output will contain the ap-poi:{tag#}
         az webapp config container show -n  ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} --slot staging > webAppOut.txt
         
-        # containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
-        containerNbr='foofoo'
-
+        containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
+        
         # see if the container number is in the file
         grep $containerNbr webAppOut.txt > containerNbrOut.txt
 
