@@ -149,18 +149,12 @@ jobs:
 
     - name: "Validate tag in staging slot"
       run: |
-        # az webapp config container show -n ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} > webAppOut.txt
-        # containerNbrOut=api-poi:${{GITHUB.RUN_NUMBER}}
-        # grep $correctContainerNumber webAppOut.txt > containerNbrOut.txt
-        # theFileSize=$(wc -c containerNbrOut.txt | awk '{print $1}')
-        # if $theFileSize == 0
-        #   exit 1
-
         # the output will contain the ap-poi:{tag#}
         az webapp config container show -n  ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} --slot staging > webAppOut.txt
         
-        containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
-        
+        # containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
+        containerNbr='foofoo'
+
         # see if the container number is in the file
         grep $containerNbr webAppOut.txt > containerNbrOut.txt
 
@@ -169,10 +163,10 @@ jobs:
         
         echo $theFileSize
         if (("0" == "$theFileSize")); then
-            echo 'it is 0'
+            echo 'File size is 0. This is not good. Exiting with code 1.'
             exit 1
         else
-            echo 'it is not 0'
+            echo 'File size is not 0. This is correct.'
             exit 0
         fi
 
