@@ -136,7 +136,7 @@ jobs:
   validate_staging:
     if: github.ref == 'refs/heads/trunk'
     runs-on: ubuntu-latest
-    needs: deploy-_staging
+    needs: deploy_staging
     steps:
 
     - name: Azure authentication
@@ -175,7 +175,7 @@ jobs:
             echo 'it is not 0'
             exit 0
         fi
-        
+
       shell: bash 
 
   # validate_staging:
