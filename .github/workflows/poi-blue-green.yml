@@ -8,6 +8,7 @@ env:
   SERVICEPRINPWD: ${{ secrets.SERVICE_PRIN_PWD }}
   TENANTID: ${{ secrets.TENANT_ID }}
   WEBAPPNAME: openhackvn13pzx8poi
+  RGNAME: openhackvn13pzx8rg
 
 on:
   push:
@@ -135,18 +136,63 @@ jobs:
   validate_staging:
     if: github.ref == 'refs/heads/trunk'
     runs-on: ubuntu-latest
-    needs: deploy_staging
+    needs: deploy-_staging
     steps:
-    - uses: actions/checkout@v2
 
-    - name: "Set Expected Validation Tag"
-      run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
+    - name: Azure authentication
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Build Validation Container
-      run: docker build -t poivalidate apis/poi/webvalidate
+    # I don't think it needs to pull down the source code for this part....    
+    # - uses: actions/checkout@v2
 
-    - name: Web Validate 
-      run: ./run.sh poivalidate $staging_url 
+    - name: "Validate tag in staging slot"
+      run: |
+        # az webapp config container show -n ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} > webAppOut.txt
+        # containerNbrOut=api-poi:${{GITHUB.RUN_NUMBER}}
+        # grep $correctContainerNumber webAppOut.txt > containerNbrOut.txt
+        # theFileSize=$(wc -c containerNbrOut.txt | awk '{print $1}')
+        # if $theFileSize == 0
+        #   exit 1
+
+        # the output will contain the ap-poi:{tag#}
+        az webapp config container show -n  ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} --slot staging > webAppOut.txt
+        
+        containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
+        
+        # see if the container number is in the file
+        grep $containerNbr webAppOut.txt > containerNbrOut.txt
+
+        # if it's not in the file, the file size will be 0
+        theFileSize=$(wc -c containerNbrOut.txt | awk '{print $1}')
+        
+        echo $theFileSize
+        if (("0" == "$theFileSize")); then
+            echo 'it is 0'
+            exit 1
+        else
+            echo 'it is not 0'
+            exit 0
+        fi
+        
+      shell: bash 
+
+  # validate_staging:
+  #   if: github.ref == 'refs/heads/trunk'
+  #   runs-on: ubuntu-latest
+  #   needs: deploy_staging
+  #   steps:
+  #   - uses: actions/checkout@v2
+
+  #   - name: "Set Expected Validation Tag"
+  #     run: sed -i 's/<--tag-->/${{github.run_number}}/g' apis/poi/webvalidate/validate.json
+
+  #   - name: Build Validation Container
+  #     run: docker build -t poivalidate apis/poi/webvalidate
+
+  #   - name: Web Validate 
+  #     run: ./run.sh poivalidate $staging_url 
 
     - name: Create issue using REST API if the job failed 
       if: ${{ failure() }}
