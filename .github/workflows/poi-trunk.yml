@@ -11,12 +11,12 @@ env:
 
 on:
   push:
-    branches: [ trunk ]
+    branches: [ none ]
     paths:
       - apis/poi/**
       - .github/workflows/poi-trunk.yml
   pull_request:
-    branches: [ trunk ]
+    branches: [ none ]
     paths:
       - apis/poi/**
       - .github/workflows/poi-trunk.yml
