@@ -203,7 +203,6 @@ jobs:
           --target-slot production \
           --resource-group ${{env.RGNAME}} \
           --name ${{env.WEBAPPNAME}}
-          --debug 
  
       shell: bash 
 
@@ -290,7 +289,7 @@ jobs:
         az webapp deployment slot swap \
           --action swap \
           --slot production \
-          --target-slot staging \ 
+          --target-slot staging \
           --resource-group ${{env.RGNAME}} \
           --name ${{env.WEBAPPNAME}}
  
