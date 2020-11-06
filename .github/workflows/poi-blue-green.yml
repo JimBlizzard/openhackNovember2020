@@ -200,9 +200,10 @@ jobs:
         az webapp deployment slot swap \
           --action swap \
           --slot staging \
-          --target-slot production \ 
+          --target-slot production \
           --resource-group ${{env.RGNAME}} \
           --name ${{env.WEBAPPNAME}}
+          --debug 
  
       shell: bash 
 
