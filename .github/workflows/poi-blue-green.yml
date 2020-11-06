@@ -207,6 +207,22 @@ jobs:
       shell: bash 
 
 
+    - name: Create issue using REST API if the job failed 
+      if: ${{ failure() }}
+      run: | 
+        curl --request POST \
+            --url https://api.github.com/repos/${{ github.repository }}/issues \
+            --header "Accept: application/vnd.github.v3+json" \
+            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            --data '{
+              "title": "Automated issue for commit : ${{ github.sha }}",
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The swap_slots job failed."
+              }' 
+        
+      shell: bash 
+
+
+
   validate_production:
     if: github.ref == 'refs/heads/trunk'
     runs-on: ubuntu-latest
@@ -251,7 +267,7 @@ jobs:
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --data '{
               "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_staging job failed."
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_production job failed."
               }' 
         
       shell: bash
@@ -288,7 +304,7 @@ jobs:
             --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             --data '{
               "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_staging job failed."
+              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The roll_back job failed."
               }' 
         
       shell: bash
