@@ -181,7 +181,7 @@ jobs:
               "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_staging job failed."
               }' 
         
-      shell: bash
+      shell: bash 
 
   swap_slots:
     if: github.ref == 'refs/heads/trunk'
