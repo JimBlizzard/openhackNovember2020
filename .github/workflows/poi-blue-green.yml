@@ -201,8 +201,8 @@ jobs:
           --action swap \
           --slot staging \
           --target-slot production \ 
-          --resource-group {{env.RGNAME}} \
-          --name {{env.WEBAPPNAME}}
+          --resource-group ${{env.RGNAME}} \
+          --name ${{env.WEBAPPNAME}}
  
       shell: bash 
 
@@ -274,8 +274,8 @@ jobs:
           --action swap \
           --slot production \
           --target-slot staging \ 
-          --resource-group {{env.RGNAME}} \
-          --name {{env.WEBAPPNAME}}
+          --resource-group ${{env.RGNAME}} \
+          --name ${{env.WEBAPPNAME}}
  
       shell: bash 
 
