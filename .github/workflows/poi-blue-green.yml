@@ -183,128 +183,128 @@ jobs:
         
       shell: bash 
 
-  swap_slots:
-    if: github.ref == 'refs/heads/trunk'
-    runs-on: ubuntu-latest
-    needs: validate_staging
-    steps:
+  # swap_slots:
+  #   if: github.ref == 'refs/heads/trunk'
+  #   runs-on: ubuntu-latest
+  #   needs: validate_staging
+  #   steps:
 
-    - name: Azure authentication
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #   - name: Azure authentication
+  #     uses: azure/login@v1
+  #     with:
+  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: "Swap staging with production"
-      run: |
+  #   - name: "Swap staging with production"
+  #     run: |
 
-        az webapp deployment slot swap \
-          --action swap \
-          --slot staging \
-          --target-slot production \
-          --resource-group ${{env.RGNAME}} \
-          --name ${{env.WEBAPPNAME}}
+  #       az webapp deployment slot swap \
+  #         --action swap \
+  #         --slot staging \
+  #         --target-slot production \
+  #         --resource-group ${{env.RGNAME}} \
+  #         --name ${{env.WEBAPPNAME}}
  
-      shell: bash 
+  #     shell: bash 
 
 
-    - name: Create issue using REST API if the job failed 
-      if: ${{ failure() }}
-      run: | 
-        curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/issues \
-            --header "Accept: application/vnd.github.v3+json" \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            --data '{
-              "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The swap_slots job failed."
-              }' 
+  #   - name: Create issue using REST API if the job failed 
+  #     if: ${{ failure() }}
+  #     run: | 
+  #       curl --request POST \
+  #           --url https://api.github.com/repos/${{ github.repository }}/issues \
+  #           --header "Accept: application/vnd.github.v3+json" \
+  #           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+  #           --data '{
+  #             "title": "Automated issue for commit : ${{ github.sha }}",
+  #             "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The swap_slots job failed."
+  #             }' 
         
-      shell: bash 
+  #     shell: bash 
 
 
 
-  validate_production:
-    if: github.ref == 'refs/heads/trunk'
-    runs-on: ubuntu-latest
-    needs: swap_slots
-    steps:
+  # validate_production:
+  #   if: github.ref == 'refs/heads/trunk'
+  #   runs-on: ubuntu-latest
+  #   needs: swap_slots
+  #   steps:
 
-    - name: Azure authentication
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #   - name: Azure authentication
+  #     uses: azure/login@v1
+  #     with:
+  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: "Validate tag in production slot"
-      run: |
-        # the output will contain the ap-poi:{tag#}
-        az webapp config container show -n  ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} > webAppOut.txt
+  #   - name: "Validate tag in production slot"
+  #     run: |
+  #       # the output will contain the ap-poi:{tag#}
+  #       az webapp config container show -n  ${{env.WEBAPPNAME}} -g ${{env.RGNAME}} > webAppOut.txt
         
-        containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
+  #       containerNbr='api-poi:${{GITHUB.RUN_NUMBER}}'
         
-        # see if the container number is in the file
-        grep $containerNbr webAppOut.txt > containerNbrOut.txt
+  #       # see if the container number is in the file
+  #       grep $containerNbr webAppOut.txt > containerNbrOut.txt
 
-        # if it's not in the file, the file size will be 0
-        theFileSize=$(wc -c containerNbrOut.txt | awk '{print $1}')
+  #       # if it's not in the file, the file size will be 0
+  #       theFileSize=$(wc -c containerNbrOut.txt | awk '{print $1}')
         
-        echo $theFileSize
-        if (("0" == "$theFileSize")); then
-            echo 'File size is 0. This is not good. Exiting with code 1.'
-            exit 1
-        else
-            echo 'File size is not 0. This is correct.'
-            exit 0
-        fi
+  #       echo $theFileSize
+  #       if (("0" == "$theFileSize")); then
+  #           echo 'File size is 0. This is not good. Exiting with code 1.'
+  #           exit 1
+  #       else
+  #           echo 'File size is not 0. This is correct.'
+  #           exit 0
+  #       fi
  
-      shell: bash 
+  #     shell: bash 
 
-    - name: Create issue using REST API if the job failed 
-      if: ${{ failure() }}
-      run: | 
-        curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/issues \
-            --header "Accept: application/vnd.github.v3+json" \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            --data '{
-              "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_production job failed."
-              }' 
+  #   - name: Create issue using REST API if the job failed 
+  #     if: ${{ failure() }}
+  #     run: | 
+  #       curl --request POST \
+  #           --url https://api.github.com/repos/${{ github.repository }}/issues \
+  #           --header "Accept: application/vnd.github.v3+json" \
+  #           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+  #           --data '{
+  #             "title": "Automated issue for commit : ${{ github.sha }}",
+  #             "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The validate_production job failed."
+  #             }' 
         
-      shell: bash
+  #     shell: bash
 
-  roll_back: 
-    if: failure()
-    runs-on: ubuntu-latest
-    needs: validate_production
-    steps: 
+  # roll_back: 
+  #   if: failure()
+  #   runs-on: ubuntu-latest
+  #   needs: validate_production
+  #   steps: 
 
-    - name: Azure authentication
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #   - name: Azure authentication
+  #     uses: azure/login@v1
+  #     with:
+  #       creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Swap production and staging (roll back)
-      run: |
+  #   - name: Swap production and staging (roll back)
+  #     run: |
 
-        az webapp deployment slot swap \
-          --action swap \
-          --slot production \
-          --target-slot staging \
-          --resource-group ${{env.RGNAME}} \
-          --name ${{env.WEBAPPNAME}}
+  #       az webapp deployment slot swap \
+  #         --action swap \
+  #         --slot production \
+  #         --target-slot staging \
+  #         --resource-group ${{env.RGNAME}} \
+  #         --name ${{env.WEBAPPNAME}}
  
-      shell: bash 
+  #     shell: bash 
 
-    - name: Create issue using REST API if the job failed 
-      if: ${{ failure() }}
-      run: | 
-        curl --request POST \
-            --url https://api.github.com/repos/${{ github.repository }}/issues \
-            --header "Accept: application/vnd.github.v3+json" \
-            --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            --data '{
-              "title": "Automated issue for commit : ${{ github.sha }}",
-              "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The roll_back job failed."
-              }' 
+  #   - name: Create issue using REST API if the job failed 
+  #     if: ${{ failure() }}
+  #     run: | 
+  #       curl --request POST \
+  #           --url https://api.github.com/repos/${{ github.repository }}/issues \
+  #           --header "Accept: application/vnd.github.v3+json" \
+  #           --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+  #           --data '{
+  #             "title": "Automated issue for commit : ${{ github.sha }}",
+  #             "body": "This issue was automatically created by the GitHub Action workflow **${{ github.workflow }}**. \n\n The commit hash was: _${{ github.sha }}_. The roll_back job failed."
+  #             }' 
         
-      shell: bash
+  #     shell: bash
